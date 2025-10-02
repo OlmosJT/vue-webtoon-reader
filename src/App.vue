@@ -3,6 +3,10 @@
     <AppHeader v-model="searchQuery" />
 
     <main id="app-content">
+      <div class="left-sidebar-column">
+        <HearMeOut />
+      </div>
+
       <div class="main-column">
         <CarouselBanner :items="bannerItems" />
 
@@ -27,7 +31,7 @@
         </div>
       </div>
 
-      <div class="sidebar-column">
+      <div class="right-sidebar-column">
         <RequestForm />
       </div>
     </main>
@@ -43,7 +47,8 @@ import CarouselBanner from './components/CarouselBanner.vue';
 import MangaCard from './components/MangaCard.vue';
 import MangaRow from './components/MangaRow.vue';
 import AppFooter from './components/AppFooter.vue';
-import RequestForm from './components/RequestForm.vue'; // <-- Import the new component
+import RequestForm from './components/RequestForm.vue';
+import HearMeOut from './components/HearMeOut.vue'; // <-- 1. Imported the new component
 
 const searchQuery = ref('');
 
@@ -83,17 +88,34 @@ body {
   padding: 0 3rem;
   box-sizing: border-box;
 
-  /* --- Updated for 2-column layout --- */
+  /* --- 2. Updated for 3-column layout --- */
   display: grid;
-  grid-template-columns: 1fr 320px; /* Flexible main column, fixed sidebar */
+  grid-template-columns: 320px 1fr 320px; /* Left Sidebar | Main | Right Sidebar */
   gap: 2.5rem;
   align-items: start;
 }
 
-/* --- Media query for responsiveness on smaller screens --- */
-@media (max-width: 1024px) {
+/* --- 3. Updated media query for better responsiveness --- */
+@media (max-width: 1200px) {
   #app-content {
-    grid-template-columns: 1fr; /* Stack columns on top of each other */
+    grid-template-columns: 1fr; /* Stack all columns on smaller screens */
+  }
+
+  /* Unstick the sidebars when they are stacked */
+  .left-sidebar-column,
+  .right-sidebar-column {
+    position: static;
+  }
+
+  /* Change display order for a better mobile experience */
+  .main-column {
+    order: 1;
+  }
+  .left-sidebar-column {
+    order: 2;
+  }
+  .right-sidebar-column {
+    order: 3;
   }
 }
 
@@ -101,10 +123,11 @@ body {
   /* This column will hold the main content */
 }
 
-.sidebar-column {
-  /* This column will hold the form */
+/* --- 4. Combined styles for both sticky sidebars --- */
+.left-sidebar-column,
+.right-sidebar-column {
   position: sticky;
-  top: 2rem; /* Makes the form stick to the top on scroll */
+  top: 2rem;
 }
 
 .search-results {
