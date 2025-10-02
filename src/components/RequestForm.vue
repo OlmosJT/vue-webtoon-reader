@@ -65,85 +65,73 @@ const handleSubmit = () => {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   height: fit-content;
 }
-
 h3 {
   margin-top: 0;
   color: #2c3e50;
 }
-
 p {
   font-size: 0.9rem;
   color: #666;
   margin-bottom: 1.5rem;
 }
-
 .form-group {
-  margin-bottom: 1.25rem; /* Increased spacing */
+  margin-bottom: 1.25rem;
 }
-
 .form-group label {
   display: block;
   font-weight: 600;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
 }
-
 input[type="text"],
 textarea {
   width: 100%;
-  padding: 12px; /* Increased padding */
+  padding: 12px;
   border: 1px solid #ccc;
-  border-radius: 12px; /* Matched border-radius */
+  border-radius: 12px;
   font-size: 1rem;
   box-sizing: border-box;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
-
-/* Added focus style to match the main search bar */
 input[type="text"]:focus,
 textarea:focus {
   outline: none;
   border-color: #007bff;
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
 }
-
 .donation-options {
   display: flex;
   gap: 10px;
 }
-
 .donation-options button {
   flex-grow: 1;
   padding: 10px;
   border: 1px solid #ccc;
-  background-color: #ffffff; /* Changed to white */
-  border-radius: 12px; /* Matched border-radius */
+  background-color: #ffffff;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 600;
   color: #555;
 }
-
 .donation-options button.active {
   background-color: #007bff;
   color: white;
   border-color: #007bff;
 }
-
 .submit-button {
   width: 100%;
   padding: 12px;
   border: none;
-  background-color: #007bff; /* Changed to primary blue */
+  background-color: #007bff;
   color: white;
   font-weight: bold;
   font-size: 1rem;
-  border-radius: 12px; /* Matched border-radius */
+  border-radius: 12px;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
-
 .submit-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #0056b3;
 }
 </style>

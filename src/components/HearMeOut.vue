@@ -36,9 +36,8 @@
 import { ref, reactive } from 'vue';
 
 const newComment = ref('');
-const hasPostedToday = ref(false); // Simulates the "post once a day" rule
+const hasPostedToday = ref(false);
 
-// Sample data for existing comments
 const comments = reactive([
   { id: 1, user: 'Kaido', avatarUrl: 'https://i.pravatar.cc/40?u=kaido', text: 'Just finished the latest chapter of Kingdom. The hype is real!' },
   { id: 2, user: 'Asuka', avatarUrl: 'https://i.pravatar.cc/40?u=asuka', text: 'Does anyone have recommendations for a good completed fantasy series? Something like Berserk but less dark.' },
@@ -48,10 +47,9 @@ const comments = reactive([
 const handleSubmit = () => {
   if (!newComment.value.trim()) return;
 
-  // Add the new comment to the top of the list
   comments.unshift({
     id: Date.now(),
-    user: 'You', // In a real app, this would be the logged-in user
+    user: 'You',
     avatarUrl: 'https://i.pravatar.cc/40?u=currentuser',
     text: newComment.value,
   });

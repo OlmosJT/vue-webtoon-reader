@@ -12,8 +12,6 @@ const props = defineProps({
   },
 });
 
-// This computed property adds a CSS class based on the tag's label
-// to give different statuses different colors.
 const tagType = computed(() => {
   switch (props.label.toLowerCase()) {
     case 'ongoing':
@@ -37,19 +35,17 @@ const tagType = computed(() => {
   font-weight: 600;
   color: #fff;
 }
-
-/* Color styles for each tag type */
 .tag-ongoing {
-  background-color: #28a745; /* Green */
+  background-color: #28a745;
 }
 .tag-finished {
-  background-color: #007bff; /* Blue */
+  background-color: #007bff;
 }
 .tag-hiatus {
-  background-color: #ffc107; /* Yellow */
+  background-color: #ffc107;
   color: #333;
 }
 .tag-default {
-  background-color: #6c757d; /* Gray */
+  background-color: #6c757d;
 }
 </style>

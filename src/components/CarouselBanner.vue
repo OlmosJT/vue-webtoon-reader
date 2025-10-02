@@ -72,7 +72,6 @@ onUnmounted(() => {
   margin-bottom: 2.5rem;
   transition: background-image 0.5s ease-in-out;
 }
-
 .banner-overlay {
   position: absolute;
   top: 0;
@@ -81,7 +80,6 @@ onUnmounted(() => {
   height: 100%;
   background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 100%);
 }
-
 .banner-content {
   position: relative;
   z-index: 2;
@@ -93,19 +91,16 @@ onUnmounted(() => {
   padding: 0 5%;
   max-width: 50%;
 }
-
 .banner-title {
   font-size: 2.5rem;
   margin: 0;
   font-weight: bold;
 }
-
 .banner-description {
   font-size: 1.1rem;
   margin: 1rem 0;
   line-height: 1.6;
 }
-
 .banner-button {
   display: inline-block;
   background-color: #007bff;
@@ -117,11 +112,9 @@ onUnmounted(() => {
   transition: background-color 0.3s;
   align-self: flex-start;
 }
-
 .banner-button:hover {
   background-color: #0056b3;
 }
-
 .nav-arrow {
   position: absolute;
   top: 50%;
@@ -130,29 +123,25 @@ onUnmounted(() => {
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
   border: none;
-  font-size: 1.5rem; /* Reduced font size */
+  font-size: 1.5rem;
   cursor: pointer;
-  width: 40px; /* Reduced width */
-  height: 40px; /* Reduced height */
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  /* Center the arrow character */
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background-color 0.3s;
 }
-
 .nav-arrow:hover {
   background-color: rgba(0, 0, 0, 0.7);
 }
-
 .nav-arrow.prev {
   left: 20px;
 }
 .nav-arrow.next {
   right: 20px;
 }
-
 .indicator-dots {
   position: absolute;
   bottom: 20px;
@@ -162,7 +151,6 @@ onUnmounted(() => {
   display: flex;
   gap: 10px;
 }
-
 .dot {
   width: 12px;
   height: 12px;
@@ -171,7 +159,6 @@ onUnmounted(() => {
   cursor: pointer;
   transition: background-color 0.3s;
 }
-
 .dot.active {
   background-color: #fff;
 }

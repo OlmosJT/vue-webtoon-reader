@@ -14,50 +14,43 @@
 </template>
 
 <script setup>
-// No script logic needed
 </script>
 
 <style scoped>
 .app-footer {
-  background-color: #ffffff; /* Changed to white */
-  color: #666; /* Changed to a softer dark gray */
+  background-color: #ffffff;
+  color: #666;
   padding: 2rem 0;
   margin-top: auto;
-  border-top: 1px solid #e0e0e0; /* Added a subtle top border for separation */
+  border-top: 1px solid #e0e0e0;
 }
-
 .footer-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
-
-  /* These rules ensure alignment with the header and main content */
-  max-width: 1440px;
+  max-width: 1680px;
   margin-left: auto;
   margin-right: auto;
-  padding: 0 3rem;
+  padding: 0 2rem;
+  box-sizing: border-box;
 }
-
 .footer-left p {
   margin: 0;
   font-size: 0.9rem;
 }
-
 .footer-right {
   display: flex;
   gap: 1.5rem;
 }
-
 .footer-right a {
-  color: #666; /* Changed to match the main text color */
+  color: #666;
   text-decoration: none;
   font-size: 0.9rem;
   transition: color 0.2s ease;
 }
-
 .footer-right a:hover {
-  color: #007bff; /* Changed to the primary blue for hover effect */
+  color: #007bff;
 }
 </style>

@@ -33,36 +33,31 @@ defineEmits(['update:modelValue']);
 
 <style scoped>
 .app-header {
-  /* This parent keeps the full-width background */
-  padding: 1rem 0; /* Vertical padding only */
+  padding: 1rem 0;
   background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   margin-bottom: 2rem;
 }
-
-/* This new rule constrains and centers the header content */
 .header-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1440px;
+  max-width: 1680px;
   margin-left: auto;
   margin-right: auto;
-  padding: 0 3rem; /* Horizontal padding for smaller screens */
+  padding: 0 2rem;
+  box-sizing: border-box;
 }
-
 .header-left, .header-right {
   display: flex;
   align-items: center;
   gap: 2.5rem;
 }
-
 .logo {
   font-size: 1.75rem;
   font-weight: bold;
   color: #2c3e50;
 }
-
 .navigation ul {
   display: flex;
   list-style: none;
@@ -70,7 +65,6 @@ defineEmits(['update:modelValue']);
   padding: 0;
   gap: 2rem;
 }
-
 .navigation a {
   text-decoration: none;
   color: #555;
@@ -79,16 +73,13 @@ defineEmits(['update:modelValue']);
   border-bottom: 2px solid transparent;
   transition: color 0.3s, border-color 0.3s;
 }
-
 .navigation a:hover {
   color: #007bff;
 }
-
 .navigation a.active {
   color: #007bff;
   border-bottom-color: #007bff;
 }
-
 .profile img {
   width: 40px;
   height: 40px;
