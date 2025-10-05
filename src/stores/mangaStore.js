@@ -1,6 +1,5 @@
 import { ref, reactive, computed } from 'vue';
 
-// All manga data, centralized in one place
 const allManga = ref([
   { id: 1, title: 'Attack on Titan', author: 'Hajime Isayama', status: 'Finished', imageUrl: 'https://placehold.co/400x600/E8112D/white?text=Attack+on+Titan', genres: ['Action', 'Fantasy', 'Seinen'], synopsis: 'In a world where humanity resides within enormous walls to protect themselves from giant man-eating humanoids known as Titans, a young boy vows to exterminate the Titans after they cause the destruction of his hometown.' },
   { id: 2, title: 'One-Punch Man', author: 'ONE', status: 'Ongoing', imageUrl: 'https://placehold.co/400x600/FFC800/white?text=One-Punch+Man', genres: ['Action', 'Comedy', 'Seinen'], synopsis: 'Follows the life of a hero who can defeat any enemy with a single punch, but seeks to find a worthy opponent after growing bored by a lack of challenge.' },
@@ -28,7 +27,6 @@ const likedManga = computed(() => {
   return allManga.value.filter(manga => likedMangaIds.value.has(manga.id));
 });
 
-// ADDED: Filter state for the Browse page
 const filters = reactive({
   searchQuery: '',
   genres: [],
@@ -36,12 +34,32 @@ const filters = reactive({
   sortBy: 'title-asc'
 });
 
+const categories = {
+  trending: {
+    title: 'Trending Now',
+    items: computed(() => allManga.value.filter(m => [2, 4, 5, 6].includes(m.id)))
+  },
+  'new-releases': {
+    title: 'New Releases',
+    items: computed(() => allManga.value.filter(m => [7, 8].includes(m.id)))
+  },
+  popular: {
+    title: 'Popular Titles',
+    items: computed(() => allManga.value.filter(m => [1, 3, 9, 10].includes(m.id)))
+  }
+};
+
+const getCategoryByName = (name) => {
+  return categories[name] || { title: 'Unknown Category', items: [] };
+};
+
 export function useMangaStore() {
   return {
     allManga,
     likedManga,
     likedMangaIds,
     toggleLike,
-    filters
+    filters,
+    getCategoryByName,
   };
 }

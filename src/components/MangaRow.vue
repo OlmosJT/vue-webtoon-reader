@@ -2,7 +2,7 @@
   <section class="manga-row">
     <header class="row-header">
       <h2 class="row-title">{{ title }}</h2>
-      <a href="#" class="see-all-link">See all &rarr;</a>
+      <router-link :to="`/category/${categoryKey}`" class="see-all-link">See all &rarr;</router-link>
     </header>
     <div class="row-content">
       <MangaCard
@@ -19,6 +19,7 @@ import MangaCard from './MangaCard.vue';
 defineProps({
   title: { type: String, required: true },
   items: { type: Array, required: true },
+  categoryKey: { type: String, required: true },
 });
 </script>
 

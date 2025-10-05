@@ -1,10 +1,8 @@
 <template>
   <div>
     <CarouselBanner :items="bannerItems" />
-
-    <div v-if="searchQuery" class="search-results">
+    <div v-if="searchQuery">
     </div>
-
     <div v-else>
       <div class="genre-filters">
         <button
@@ -16,23 +14,24 @@
           {{ genre }}
         </button>
       </div>
-
-      <MangaRow title="Trending Now" :items="filteredTrendingManga" />
-      <MangaRow title="New Releases" :items="filteredNewReleases" />
-      <MangaRow title="Popular Titles" :items="filteredPopularManga" />
+      <MangaRow title="Trending Now" :items="trendingManga" category-key="trending" />
+      <MangaRow title="New Releases" :items="newReleases" category-key="new-releases" />
+      <MangaRow title="Popular Titles" :items="popularManga" category-key="popular" />
     </div>
   </div>
 </template>
 
 <script setup>
-// ... existing script ...
 import { ref, computed } from 'vue';
 import CarouselBanner from '../components/CarouselBanner.vue';
-import MangaCard from '../components/MangaCard.vue';
 import MangaRow from '../components/MangaRow.vue';
 import { useMangaStore } from '../stores/mangaStore.js';
 
-const { allManga } = useMangaStore();
+const { getCategoryByName } = useMangaStore();
+
+const trendingManga = computed(() => getCategoryByName('trending').items);
+const newReleases = computed(() => getCategoryByName('new-releases').items);
+const popularManga = computed(() => getCategoryByName('popular').items);
 
 const searchQuery = ref('');
 const bannerItems = ref([
@@ -40,24 +39,8 @@ const bannerItems = ref([
   { id: 2, title: 'New Chapter: One-Punch Man', description: 'Saitama faces his most baffling challenge yet: a supermarket sale. Don\'t miss the latest hilarious chapter.', link: '#', imageUrl: 'https://placehold.co/1200x400/FFC800/white?text=One-Punch+Man+Banner' },
   { id: 3, title: 'Now Trending: Jujutsu Kaisen', description: 'Dive into a world of curses and sorcery. Find out why everyone is talking about Jujutsu High.', link: '#', imageUrl: 'https://placehold.co/1200x400/7B1FA2/white?text=Jujutsu+Kaisen+Banner' },
 ]);
-
 const genres = ref(['All', 'Action', 'Fantasy', 'Comedy', 'Seinen']);
 const selectedGenre = ref('All');
-
-const trendingManga = computed(() => allManga.value.filter(m => [2, 4, 5, 6].includes(m.id)));
-const newReleases = computed(() => allManga.value.filter(m => [7, 8].includes(m.id)));
-const popularManga = computed(() => allManga.value.filter(m => [1, 3, 9, 10].includes(m.id)));
-
-const filterByGenre = (list) => {
-  if (selectedGenre.value === 'All') {
-    return list.value;
-  }
-  return list.value.filter(manga => manga.genres.includes(selectedGenre.value));
-};
-
-const filteredTrendingManga = computed(() => filterByGenre(trendingManga));
-const filteredNewReleases = computed(() => filterByGenre(newReleases));
-const filteredPopularManga = computed(() => filterByGenre(popularManga));
 </script>
 
 <style scoped>
