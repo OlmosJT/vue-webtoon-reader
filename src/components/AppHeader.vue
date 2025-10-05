@@ -33,9 +33,7 @@
           </div>
         </div>
 
-        <div v-else class="auth-buttons">
-          <router-link to="/login" class="btn-login">Log In</router-link>
-        </div>
+        <router-link v-else to="/login" class="btn-login">Log In</router-link>
 
       </div>
     </div>
@@ -175,7 +173,7 @@ watch(() => route.path, () => {
   border-radius: 50%;
   display: block;
 }
-.auth-buttons .btn-login {
+.btn-login {
   padding: 8px 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -183,8 +181,9 @@ watch(() => route.path, () => {
   color: #333;
   font-weight: 600;
   transition: all 0.2s ease;
+  white-space: nowrap; /* Prevents text from wrapping */
 }
-.auth-buttons .btn-login:hover {
+.btn-login:hover {
   background-color: #f1f5f9;
   border-color: #aaa;
 }

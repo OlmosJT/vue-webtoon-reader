@@ -15,45 +15,78 @@
 
       <div class="form-group">
         <label for="manga-reason">Reason for Request</label>
-        <textarea id="manga-reason" v-model="formData.reason" rows="3"></textarea>
+        <textarea id="manga-reason" v-model="formData.reason" rows="3" required></textarea>
       </div>
 
       <div class="form-group">
-        <label>Include a small donation (Optional)</label>
-        <div class="donation-options">
-          <button type="button" @click="setDonation(5)" :class="{ active: formData.donation === 5 }">$5</button>
-          <button type="button" @click="setDonation(10)" :class="{ active: formData.donation === 10 }">$10</button>
-          <button type="button" @click="setDonation(20)" :class="{ active: formData.donation === 20 }">$20</button>
+        <label>Donation Amount (Minimum 10,000 UZS)</label>
+        <div class="donation-input-group">
+          <button type="button" @click="decrementDonation" class="stepper-btn">-</button>
+          <input type="number" v-model="formData.donation" :min="minDonation" :step="step" />
+          <span class="currency">UZS</span>
+          <button type="button" @click="incrementDonation" class="stepper-btn">+</button>
         </div>
       </div>
 
       <button type="submit" class="submit-button">Submit Request</button>
     </form>
+
+    <CustomPopup
+      :visible="isPopupVisible"
+      :message="popupMessage"
+      @close="closePopup"
+    />
   </aside>
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { ref, reactive } from 'vue';
+import CustomPopup from './CustomPopup.vue';
+
+const minDonation = 10000;
+const step = 5000;
+
+const isPopupVisible = ref(false);
+const popupMessage = ref('');
 
 const formData = reactive({
   title: '',
   author: '',
   reason: '',
-  donation: null,
+  donation: minDonation,
 });
 
-const setDonation = (amount) => {
-  formData.donation = formData.donation === amount ? null : amount;
+const decrementDonation = () => {
+  const newValue = formData.donation - step;
+  if (newValue >= minDonation) {
+    formData.donation = newValue;
+  }
+};
+
+const incrementDonation = () => {
+  formData.donation += step;
 };
 
 const handleSubmit = () => {
-  console.log('Form Submitted:', formData);
-  alert(`Thank you for requesting "${formData.title}"!`);
+  if (formData.donation < minDonation) {
+    alert(`Donation must be at least ${minDonation.toLocaleString()} UZS.`);
+    return;
+  }
 
+  const amount = formData.donation.toLocaleString();
+  popupMessage.value = `Thank you for your donation of ${amount} UZS. Your request was sent to team management and they will answer to your request in a couple of days. You could see the notification page for new updates or answers from the team to your request.`;
+
+  isPopupVisible.value = true;
+};
+
+const closePopup = () => {
+  isPopupVisible.value = false;
+
+  // Reset form
   formData.title = '';
   formData.author = '';
   formData.reason = '';
-  formData.donation = null;
+  formData.donation = minDonation;
 };
 </script>
 
@@ -99,26 +132,46 @@ textarea:focus {
   border-color: #007bff;
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
 }
-.donation-options {
+
+.donation-input-group {
   display: flex;
-  gap: 10px;
-}
-.donation-options button {
-  flex-grow: 1;
-  padding: 10px;
+  align-items: center;
   border: 1px solid #ccc;
-  background-color: #ffffff;
   border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  overflow: hidden;
+}
+.donation-input-group input {
+  width: 100%;
+  border: none;
+  outline: none;
+  text-align: center;
+  font-size: 1.2rem;
   font-weight: 600;
-  color: #555;
+  -moz-appearance: textfield; /* Firefox */
 }
-.donation-options button.active {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
+.donation-input-group input::-webkit-outer-spin-button,
+.donation-input-group input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
+.currency {
+  padding: 0 1rem;
+  color: #888;
+  font-weight: 600;
+}
+.stepper-btn {
+  background-color: #f8f9fa;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 10px 20px;
+  transition: background-color 0.2s;
+}
+.stepper-btn:hover {
+  background-color: #e9ecef;
+}
+
 .submit-button {
   width: 100%;
   padding: 12px;
@@ -130,6 +183,7 @@ textarea:focus {
   border-radius: 12px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  margin-top: 1.25rem;
 }
 .submit-button:hover {
   background-color: #0056b3;

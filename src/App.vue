@@ -4,14 +4,16 @@
 
     <main id="app-content" :class="{ 'chapter-mode': isChapterView }">
       <div class="left-sidebar-column" :class="{ hidden: isChapterView }">
-        <MangaFilter v-if="$route.path === '/browse'" />
-        <HearMeOut v-else />
+        <template v-if="isAuthenticated">
+          <MangaFilter v-if="$route.path === '/browse'" />
+          <HearMeOut v-else />
+        </template>
       </div>
 
       <router-view class="main-column" />
 
       <div class="right-sidebar-column" :class="{ hidden: isChapterView }">
-        <RequestForm />
+        <RequestForm v-if="isAuthenticated" />
       </div>
     </main>
 
@@ -27,8 +29,11 @@ import AppFooter from './components/AppFooter.vue';
 import RequestForm from './components/RequestForm.vue';
 import HearMeOut from './components/HearMeOut.vue';
 import MangaFilter from './components/MangaFilter.vue';
+import { useMangaStore } from './stores/mangaStore';
 
 const route = useRoute();
+const { isAuthenticated } = useMangaStore(); // Get auth state
+
 const isChapterView = computed(() => route.name === 'chapter-view');
 </script>
 
