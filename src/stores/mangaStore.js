@@ -1,4 +1,5 @@
 import { ref, reactive, computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 const allManga = ref([
   { id: 1, title: 'Attack on Titan', author: 'Hajime Isayama', status: 'Finished', imageUrl: 'https://placehold.co/400x600/E8112D/white?text=Attack+on+Titan', genres: ['Action', 'Fantasy', 'Seinen'], synopsis: 'In a world where humanity resides within enormous walls to protect themselves from giant man-eating humanoids known as Titans, a young boy vows to exterminate the Titans after they cause the destruction of his hometown.' },
@@ -13,6 +14,8 @@ const allManga = ref([
   { id: 10, title: 'Grand Blue', author: 'Kenji Inoue', status: 'Ongoing', imageUrl: 'https://placehold.co/400x600/1E90FF/white?text=Grand+Blue', genres: ['Comedy', 'Seinen'], synopsis: 'A college student looking forward to his ideal life in a seaside town gets roped into the antics of his university\'s eccentric diving club.' },
 ]);
 
+const likedMangaIds = ref(new Set());
+
 const notifications = ref([
   { id: 1, text: 'Chapter 158 of "Jujutsu Kaisen" was just released!', time: '5 minutes ago', unread: true },
   { id: 2, text: '"Attack on Titan" has a new recommendation for you.', time: '1 hour ago', unread: true },
@@ -26,9 +29,6 @@ const hasUnreadNotifications = computed(() => notifications.value.some(n => n.un
 const markNotificationsAsRead = () => {
   notifications.value.forEach(n => n.unread = false);
 };
-
-
-const likedMangaIds = ref(new Set());
 
 const toggleLike = (mangaId) => {
   if (likedMangaIds.value.has(mangaId)) {
@@ -61,8 +61,6 @@ const getMangaById = (id) => {
 };
 
 const getChaptersForManga = (mangaId) => {
-  // In a real app, this would fetch chapters for a specific manga.
-  // For now, we return the same placeholder list for any manga.
   return Array.from({ length: 158 }, (_, i) => {
     const chapterNum = 158 - i;
     return {
@@ -92,9 +90,22 @@ const getCategoryByName = (name) => {
   return categories[name] || { title: 'Unknown Category', items: [] };
 };
 
+const isAuthenticated = ref(false);
+const user = ref(null);
+
+const login = (userData) => {
+  isAuthenticated.value = true;
+  user.value = userData;
+};
+
+const logout = () => {
+  isAuthenticated.value = false;
+  user.value = null;
+};
+
+
 export function useMangaStore() {
   return {
-    // ... existing exports
     allManga,
     likedManga,
     likedMangaIds,
@@ -107,5 +118,9 @@ export function useMangaStore() {
     notifications,
     hasUnreadNotifications,
     markNotificationsAsRead,
+    isAuthenticated,
+    user,
+    login,
+    logout,
   };
 }

@@ -7,29 +7,36 @@
           <ul>
             <li><router-link to="/">Home</router-link></li>
             <li><router-link to="/browse">Browse</router-link></li>
-            <li><router-link to="/my-list">My List</router-link></li>
+            <li v-if="isAuthenticated"><router-link to="/my-list">My List</router-link></li>
           </ul>
         </nav>
       </div>
       <div class="header-right">
         <SearchInput v-model="filters.searchQuery" />
 
-        <div class="notification-icon" @click="toggleNotifications">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
-          </svg>
-          <span v-if="hasUnreadNotifications" class="notification-badge"></span>
-          <Transition name="dropdown-fade">
-            <NotificationsDropdown v-if="isNotificationsVisible" />
-          </Transition>
+        <div v-if="isAuthenticated" class="user-actions">
+          <div class="notification-icon" @click="toggleNotifications">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+            </svg>
+            <span v-if="hasUnreadNotifications" class="notification-badge"></span>
+            <Transition name="dropdown-fade">
+              <NotificationsDropdown v-if="isNotificationsVisible" />
+            </Transition>
+          </div>
+
+          <div class="profile" @click="toggleProfileDropdown">
+            <img src="https://i.pravatar.cc/40" alt="Profile" />
+            <Transition name="dropdown-fade">
+              <ProfileDropdown v-if="isProfileDropdownVisible" />
+            </Transition>
+          </div>
         </div>
 
-        <div class="profile" @click="toggleProfileDropdown">
-          <img src="https://i.pravatar.cc/40" alt="Profile" />
-          <Transition name="dropdown-fade">
-            <ProfileDropdown v-if="isProfileDropdownVisible" />
-          </Transition>
+        <div v-else class="auth-buttons">
+          <router-link to="/login" class="btn-login">Log In</router-link>
         </div>
+
       </div>
     </div>
   </header>
@@ -41,12 +48,12 @@ import { useRouter, useRoute } from 'vue-router';
 import SearchInput from './SearchInput.vue';
 import ProfileDropdown from './ProfileDropdown.vue';
 import NotificationsDropdown from './NotificationsDropdown.vue';
-import { useMangaStore } from '../stores/mangaStore';
+import { useMangaStore } from '../stores/mangaStore.js';
 
 const isProfileDropdownVisible = ref(false);
 const isNotificationsVisible = ref(false);
 
-const { filters, hasUnreadNotifications, markNotificationsAsRead } = useMangaStore();
+const { filters, hasUnreadNotifications, markNotificationsAsRead, isAuthenticated } = useMangaStore();
 const router = useRouter();
 const route = useRoute();
 
@@ -83,11 +90,13 @@ watch(() => route.path, () => {
 .dropdown-fade-leave-active {
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
+
 .dropdown-fade-enter-from,
 .dropdown-fade-leave-to {
   opacity: 0;
   transform: translateY(-10px);
 }
+
 .app-header {
   padding: 1rem 0;
   background-color: #ffffff;
@@ -107,7 +116,7 @@ watch(() => route.path, () => {
 .header-left, .header-right {
   display: flex;
   align-items: center;
-  gap: 1.5rem; /* Adjusted gap */
+  gap: 2.5rem;
 }
 .logo {
   font-size: 1.75rem;
@@ -136,6 +145,11 @@ watch(() => route.path, () => {
   color: #007bff;
   border-bottom-color: #007bff;
 }
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
 .notification-icon, .profile {
   position: relative;
   cursor: pointer;
@@ -160,5 +174,18 @@ watch(() => route.path, () => {
   height: 40px;
   border-radius: 50%;
   display: block;
+}
+.auth-buttons .btn-login {
+  padding: 8px 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+.auth-buttons .btn-login:hover {
+  background-color: #f1f5f9;
+  border-color: #aaa;
 }
 </style>
