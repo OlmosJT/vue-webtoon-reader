@@ -5,8 +5,8 @@
         <div class="logo">MangaHub</div>
         <nav class="navigation">
           <ul>
-            <li><a href="#" class="active">Home</a></li>
-            <li><a href="#">Browse</a></li>
+            <li><router-link to="/">Home</router-link></li>
+            <li><router-link to="/browse">Browse</router-link></li>
             <li><a href="#">My List</a></li>
           </ul>
         </nav>
@@ -76,7 +76,7 @@ defineEmits(['update:modelValue']);
 .navigation a:hover {
   color: #007bff;
 }
-.navigation a.active {
+.navigation .router-link-exact-active {
   color: #007bff;
   border-bottom-color: #007bff;
 }
