@@ -7,7 +7,7 @@
           <ul>
             <li><router-link to="/">Home</router-link></li>
             <li><router-link to="/browse">Browse</router-link></li>
-            <li><a href="#">My List</a></li>
+            <li><router-link to="/my-list">My List</router-link></li>
           </ul>
         </nav>
       </div>

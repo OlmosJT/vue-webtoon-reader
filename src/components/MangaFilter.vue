@@ -8,7 +8,6 @@
         type="text"
         id="search"
         v-model="filters.searchQuery"
-        @input="emitFilters"
         placeholder="Search by title..."
       />
     </div>
@@ -29,7 +28,7 @@
 
     <div class="filter-group">
       <label for="status">Status</label>
-      <select id="status" v-model="filters.status" @change="emitFilters">
+      <select id="status" v-model="filters.status">
         <option value="">All</option>
         <option value="Ongoing">Ongoing</option>
         <option value="Finished">Finished</option>
@@ -39,7 +38,7 @@
 
     <div class="filter-group">
       <label for="sort-by">Sort By</label>
-      <select id="sort-by" v-model="filters.sortBy" @change="emitFilters">
+      <select id="sort-by" v-model="filters.sortBy">
         <option value="title-asc">Title (A-Z)</option>
         <option value="title-desc">Title (Z-A)</option>
       </select>
@@ -48,36 +47,25 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { useMangaStore } from '../stores/mangaStore.js';
 
-const allGenres = ['Action', 'Fantasy', 'Comedy', 'Seinen']
-const emit = defineEmits(['filter-change'])
-
-const filters = reactive({
-  searchQuery: '',
-  genres: [],
-  status: '',
-  sortBy: 'title-asc',
-})
+const allGenres = ['Action', 'Fantasy', 'Comedy', 'Seinen'];
+const { filters } = useMangaStore();
 
 const toggleGenre = (genre) => {
-  const index = filters.genres.indexOf(genre)
+  const index = filters.genres.indexOf(genre);
   if (index === -1) {
-    filters.genres.push(genre)
+    filters.genres.push(genre);
   } else {
-    filters.genres.splice(index, 1)
+    filters.genres.splice(index, 1);
   }
-  emitFilters()
-}
-
-const emitFilters = () => {
-  emit('filter-change', filters)
-}
+};
 </script>
 
 <style scoped>
+/* Styles are the same, no changes needed here */
 .manga-filter {
-  width: 280px; /* Increased width slightly */
+  width: 280px;
   flex-shrink: 0;
   background-color: #ffffff;
   padding: 1.5rem;
@@ -107,7 +95,7 @@ select {
   border-radius: 12px;
   border: 1px solid #ccc;
   font-size: 1rem;
-  box-sizing: border-box; /* This is the main fix */
+  box-sizing: border-box;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 input[type='text']:focus,

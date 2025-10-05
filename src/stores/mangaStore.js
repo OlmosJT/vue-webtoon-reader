@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue';
+import { ref, reactive, computed } from 'vue';
 
 // All manga data, centralized in one place
 const allManga = ref([
@@ -14,10 +14,8 @@ const allManga = ref([
   { id: 10, title: 'Grand Blue', author: 'Kenji Inoue', status: 'Ongoing', imageUrl: 'https://placehold.co/400x600/1E90FF/white?text=Grand+Blue', genres: ['Comedy', 'Seinen'], synopsis: 'A college student looking forward to his ideal life in a seaside town gets roped into the antics of his university\'s eccentric diving club.' },
 ]);
 
-// Reactive set for liked manga IDs
 const likedMangaIds = ref(new Set());
 
-// Function to toggle a manga's like status
 const toggleLike = (mangaId) => {
   if (likedMangaIds.value.has(mangaId)) {
     likedMangaIds.value.delete(mangaId);
@@ -26,9 +24,16 @@ const toggleLike = (mangaId) => {
   }
 };
 
-// Computed property to get the full liked manga objects
 const likedManga = computed(() => {
   return allManga.value.filter(manga => likedMangaIds.value.has(manga.id));
+});
+
+// ADDED: Filter state for the Browse page
+const filters = reactive({
+  searchQuery: '',
+  genres: [],
+  status: '',
+  sortBy: 'title-asc'
 });
 
 export function useMangaStore() {
@@ -37,5 +42,6 @@ export function useMangaStore() {
     likedManga,
     likedMangaIds,
     toggleLike,
+    filters
   };
 }

@@ -1,16 +1,8 @@
 <template>
-  <div class="main-column">
+  <div>
     <CarouselBanner :items="bannerItems" />
 
     <div v-if="searchQuery" class="search-results">
-      <h2>Search Results for "{{ searchQuery }}"</h2>
-      <div class="manga-container">
-        <MangaCard
-          v-for="manga in filteredMangaList"
-          :key="manga.id"
-          :manga="manga"
-        />
-      </div>
     </div>
 
     <div v-else>
@@ -33,10 +25,14 @@
 </template>
 
 <script setup>
+// ... existing script ...
 import { ref, computed } from 'vue';
 import CarouselBanner from '../components/CarouselBanner.vue';
 import MangaCard from '../components/MangaCard.vue';
 import MangaRow from '../components/MangaRow.vue';
+import { useMangaStore } from '../stores/mangaStore.js';
+
+const { allManga } = useMangaStore();
 
 const searchQuery = ref('');
 const bannerItems = ref([
@@ -48,22 +44,9 @@ const bannerItems = ref([
 const genres = ref(['All', 'Action', 'Fantasy', 'Comedy', 'Seinen']);
 const selectedGenre = ref('All');
 
-const trendingManga = ref([
-  { id: 2, title: 'One-Punch Man', author: 'ONE', status: 'Ongoing', imageUrl: 'https://placehold.co/400x600/FFC800/white?text=One-Punch+Man', genres: ['Action', 'Comedy', 'Seinen'], synopsis: 'Follows the life of a hero who can defeat any enemy with a single punch, but seeks to find a worthy opponent after growing bored by a lack of challenge.' },
-  { id: 4, title: 'Jujutsu Kaisen', author: 'Gege Akutami', status: 'Ongoing', imageUrl: 'https://placehold.co/400x600/7B1FA2/white?text=Jujutsu+Kaisen', genres: ['Action', 'Fantasy'], synopsis: 'A boy swallows a cursed talisman - the finger of a demon - and becomes cursed himself. He enters a shaman\'s school to be able to locate the demon\'s other body parts and thus exorcise himself.' },
-  { id: 5, title: 'Chainsaw Man', author: 'Tatsuki Fujimoto', status: 'Ongoing', imageUrl: 'https://placehold.co/400x600/FF4500/white?text=Chainsaw+Man', genres: ['Action', 'Seinen'], synopsis: 'Following a betrayal, a young man left for dead is reborn as a powerful devil-human hybrid and is soon enlisted into an organization dedicated to hunting devils.' },
-  { id: 6, title: 'Vinland Saga', author: 'Makoto Yukimura', status: 'Ongoing', imageUrl: 'https://placehold.co/400x600/8B4513/white?text=Vinland+Saga', genres: ['Action', 'Seinen'], synopsis: 'A young man named Thorfinn finds himself in a quest for revenge against the man who murdered his father. A story of vikings and vengeance.' },
-]);
-const newReleases = ref([
-  { id: 7, title: 'Spy x Family', author: 'Tatsuya Endo', status: 'Ongoing', imageUrl: 'https://placehold.co/400x600/32CD32/white?text=Spy+x+Family', genres: ['Action', 'Comedy'], synopsis: 'A spy on an undercover mission gets married and adopts a child, not realizing that his fake wife and daughter are an assassin and a telepath, respectively.' },
-  { id: 8, title: 'Kaiju No. 8', author: 'Naoya Matsumoto', status: 'Ongoing', imageUrl: 'https://placehold.co/400x600/4682B4/white?text=Kaiju+No.+8', genres: ['Action', 'Fantasy'], synopsis: 'A man who is part of a crew that cleans up after giant monster attacks ingests a monster, gaining the ability to turn into one himself.' },
-]);
-const popularManga = ref([
-  { id: 1, title: 'Attack on Titan', author: 'Hajime Isayama', status: 'Finished', imageUrl: 'https://placehold.co/400x600/E8112D/white?text=Attack+on+Titan', genres: ['Action', 'Fantasy', 'Seinen'], synopsis: 'In a world where humanity resides within enormous walls to protect themselves from giant man-eating humanoids known as Titans, a young boy vows to exterminate the Titans after they cause the destruction of his hometown.' },
-  { id: 3, title: 'Berserk', author: 'Kentaro Miura', status: 'Hiatus', imageUrl: 'https://placehold.co/400x600/1C1C1C/white?text=Berserk', genres: ['Action', 'Fantasy', 'Seinen'], synopsis: 'Guts, a former mercenary now known as the "Black Swordsman," is out for revenge. A dark fantasy epic of struggle and destiny.' },
-  { id: 9, title: 'Vagabond', author: 'Takehiko Inoue', status: 'Hiatus', imageUrl: 'https://placehold.co/400x600/A52A2A/white?text=Vagabond', genres: ['Action', 'Seinen'], synopsis: 'The fictionalized life of the legendary Japanese swordsman Miyamoto Musashi, chronicling his journey from a brash youth to an enlightened warrior.' },
-  { id: 10, title: 'Grand Blue', author: 'Kenji Inoue', status: 'Ongoing', imageUrl: 'https://placehold.co/400x600/1E90FF/white?text=Grand+Blue', genres: ['Comedy', 'Seinen'], synopsis: 'A college student looking forward to his ideal life in a seaside town gets roped into the antics of his university\'s eccentric diving club.' },
-]);
+const trendingManga = computed(() => allManga.value.filter(m => [2, 4, 5, 6].includes(m.id)));
+const newReleases = computed(() => allManga.value.filter(m => [7, 8].includes(m.id)));
+const popularManga = computed(() => allManga.value.filter(m => [1, 3, 9, 10].includes(m.id)));
 
 const filterByGenre = (list) => {
   if (selectedGenre.value === 'All') {
@@ -75,12 +58,32 @@ const filterByGenre = (list) => {
 const filteredTrendingManga = computed(() => filterByGenre(trendingManga));
 const filteredNewReleases = computed(() => filterByGenre(newReleases));
 const filteredPopularManga = computed(() => filterByGenre(popularManga));
-
-const allManga = computed(() => [...trendingManga.value, ...newReleases.value, ...popularManga.value]);
-const filteredMangaList = computed(() => {
-  if (!searchQuery.value) {
-    return [];
-  }
-  return allManga.value.filter(manga => manga.title.toLowerCase().includes(searchQuery.value.toLowerCase()));
-});
 </script>
+
+<style scoped>
+.genre-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 1rem;
+}
+.genre-filters button {
+  padding: 10px 20px;
+  border: none;
+  background-color: transparent;
+  color: #555;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.genre-filters button:hover {
+  background-color: #f0f0f0;
+}
+.genre-filters button.active {
+  background-color: #007bff;
+  color: white;
+}
+</style>
