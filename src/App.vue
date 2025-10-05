@@ -1,30 +1,35 @@
 <template>
   <div class="app-container">
-    <AppHeader />
+    <AppHeader :class="{ hidden: isChapterView }" />
 
-    <main id="app-content">
-      <div class="left-sidebar-column">
+    <main id="app-content" :class="{ 'chapter-mode': isChapterView }">
+      <div class="left-sidebar-column" :class="{ hidden: isChapterView }">
         <MangaFilter v-if="$route.path === '/browse'" />
         <HearMeOut v-else />
       </div>
 
       <router-view class="main-column" />
 
-      <div class="right-sidebar-column">
+      <div class="right-sidebar-column" :class="{ hidden: isChapterView }">
         <RequestForm />
       </div>
     </main>
 
-    <AppFooter />
+    <AppFooter :class="{ hidden: isChapterView }" />
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 import AppHeader from './components/AppHeader.vue';
 import AppFooter from './components/AppFooter.vue';
 import RequestForm from './components/RequestForm.vue';
 import HearMeOut from './components/HearMeOut.vue';
 import MangaFilter from './components/MangaFilter.vue';
+
+const route = useRoute();
+const isChapterView = computed(() => route.name === 'chapter-view');
 </script>
 
 <style>
@@ -51,8 +56,18 @@ body {
   box-sizing: border-box;
   display: grid;
   grid-template-columns: 300px 1fr 300px;
-  gap: 2.5rem; /* Increased gap for better spacing */
+  gap: 2.5rem;
   align-items: start;
+}
+
+#app-content.chapter-mode {
+  display: block;
+  max-width: none;
+  padding: 0;
+}
+
+.hidden {
+  display: none;
 }
 
 @media (max-width: 1200px) {

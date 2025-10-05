@@ -13,6 +13,21 @@ const allManga = ref([
   { id: 10, title: 'Grand Blue', author: 'Kenji Inoue', status: 'Ongoing', imageUrl: 'https://placehold.co/400x600/1E90FF/white?text=Grand+Blue', genres: ['Comedy', 'Seinen'], synopsis: 'A college student looking forward to his ideal life in a seaside town gets roped into the antics of his university\'s eccentric diving club.' },
 ]);
 
+const notifications = ref([
+  { id: 1, text: 'Chapter 158 of "Jujutsu Kaisen" was just released!', time: '5 minutes ago', unread: true },
+  { id: 2, text: '"Attack on Titan" has a new recommendation for you.', time: '1 hour ago', unread: true },
+  { id: 3, text: 'Your request for "One Piece" has been approved.', time: 'Yesterday', unread: false },
+  { id: 4, text: 'Welcome to MangaHub, olmosjt!', time: '2 days ago', unread: false },
+  { id: 5, text: 'A new comment was posted on the "Hear Me Out!" board.', time: '2 days ago', unread: false },
+]);
+
+const hasUnreadNotifications = computed(() => notifications.value.some(n => n.unread));
+
+const markNotificationsAsRead = () => {
+  notifications.value.forEach(n => n.unread = false);
+};
+
+
 const likedMangaIds = ref(new Set());
 
 const toggleLike = (mangaId) => {
@@ -33,6 +48,30 @@ const filters = reactive({
   status: '',
   sortBy: 'title-asc'
 });
+
+const resetFilters = () => {
+  filters.searchQuery = '';
+  filters.genres = [];
+  filters.status = '';
+  filters.sortBy = 'title-asc';
+}
+
+const getMangaById = (id) => {
+  return allManga.value.find(manga => manga.id === parseInt(id));
+};
+
+const getChaptersForManga = (mangaId) => {
+  // In a real app, this would fetch chapters for a specific manga.
+  // For now, we return the same placeholder list for any manga.
+  return Array.from({ length: 158 }, (_, i) => {
+    const chapterNum = 158 - i;
+    return {
+      id: chapterNum,
+      title: `Chapter ${chapterNum}: The Unfolding Mystery`,
+      date: `October ${Math.floor(Math.random() * 30) + 1}, 2025`,
+    };
+  });
+};
 
 const categories = {
   trending: {
@@ -55,11 +94,18 @@ const getCategoryByName = (name) => {
 
 export function useMangaStore() {
   return {
+    // ... existing exports
     allManga,
     likedManga,
     likedMangaIds,
     toggleLike,
     filters,
     getCategoryByName,
+    resetFilters,
+    getMangaById,
+    getChaptersForManga,
+    notifications,
+    hasUnreadNotifications,
+    markNotificationsAsRead,
   };
 }

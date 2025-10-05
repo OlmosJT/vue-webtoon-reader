@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import BrowseView from '../views/BrowseView.vue'
 import MyListView from '../views/MyListView.vue'
 import CategoryView from '../views/CategoryView.vue'
+import MangaDetailView from '../views/MangaDetailView.vue'
+import ChapterView from '../views/ChapterView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +28,18 @@ const router = createRouter({
       path: '/category/:categoryName',
       name: 'category',
       component: CategoryView,
+      props: true
+    },
+    {
+      path: '/manga/:id',
+      name: 'manga-detail',
+      component: MangaDetailView,
+      props: true
+    },
+    {
+      path: '/manga/:mangaId/chapter/:chapterId',
+      name: 'chapter-view',
+      component: ChapterView,
       props: true
     }
   ]

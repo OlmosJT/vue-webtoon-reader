@@ -1,26 +1,28 @@
 <template>
-  <div
-    class="manga-card"
-    @mouseenter="isHovered = true"
-    @mouseleave="isHovered = false"
-  >
-    <MangaPopover v-if="isHovered" :manga="manga" />
+  <router-link :to="`/manga/${manga.id}`" class="manga-card-link">
+    <div
+      class="manga-card"
+      @mouseenter="isHovered = true"
+      @mouseleave="isHovered = false"
+    >
+      <MangaPopover v-if="isHovered" :manga="manga" />
 
-    <button @click.stop="toggleLike(manga.id)" class="like-button" :class="{ liked: isLiked }">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-      </svg>
-    </button>
+      <button @click.prevent.stop="toggleLike(manga.id)" class="like-button" :class="{ liked: isLiked }">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+      </button>
 
-    <img :src="manga.imageUrl" :alt="manga.title" class="manga-card-image" />
-    <div class="manga-card-content">
-      <h3 class="manga-card-title">{{ manga.title }}</h3>
-      <p class="manga-card-author">By {{ manga.author }}</p>
-      <div class="tags-container">
-        <Tag :label="manga.status" />
+      <img :src="manga.imageUrl" :alt="manga.title" class="manga-card-image" />
+      <div class="manga-card-content">
+        <h3 class="manga-card-title">{{ manga.title }}</h3>
+        <p class="manga-card-author">By {{ manga.author }}</p>
+        <div class="tags-container">
+          <Tag :label="manga.status" />
+        </div>
       </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script setup>
@@ -40,10 +42,14 @@ const props = defineProps({
 
 const { likedMangaIds, toggleLike } = useMangaStore();
 const isLiked = computed(() => likedMangaIds.value.has(props.manga.id));
-
 </script>
 
 <style scoped>
+.manga-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
 .manga-card {
   position: relative;
   width: 250px;

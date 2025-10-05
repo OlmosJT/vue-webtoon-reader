@@ -9,6 +9,7 @@
       />
     </div>
     <Pagination
+      v-if="totalPages > 1"
       :current-page="currentPage"
       :total-pages="totalPages"
       @page-changed="handlePageChange"
@@ -17,7 +18,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useMangaStore } from '../stores/mangaStore';
 import MangaCard from '../components/MangaCard.vue';
 import Pagination from '../components/Pagination.vue';
@@ -30,27 +31,31 @@ const props = defineProps({
 });
 
 const { getCategoryByName } = useMangaStore();
+
 const category = computed(() => getCategoryByName(props.categoryName));
+const categoryItems = computed(() => category.value.items.value || []);
 
 const currentPage = ref(1);
 const itemsPerPage = ref(8);
 
 const totalPages = computed(() => {
-  if (!category.value.items) return 1;
-  return Math.ceil(category.value.items.length / itemsPerPage.value);
+  return Math.ceil(categoryItems.value.length / itemsPerPage.value);
 });
 
 const paginatedManga = computed(() => {
-  if (!category.value.items) return [];
   const start = (currentPage.value - 1) * itemsPerPage.value;
   const end = start + itemsPerPage.value;
-  return category.value.items.slice(start, end);
+  return categoryItems.value.slice(start, end);
 });
 
 const handlePageChange = (newPage) => {
   currentPage.value = newPage;
   window.scrollTo(0, 0);
 };
+
+watch(() => props.categoryName, () => {
+  currentPage.value = 1;
+});
 </script>
 
 <style scoped>

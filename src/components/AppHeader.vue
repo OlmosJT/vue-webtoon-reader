@@ -12,12 +12,23 @@
         </nav>
       </div>
       <div class="header-right">
-        <SearchInput
-          :model-value="modelValue"
-          @update:model-value="$emit('update:modelValue', $event)"
-        />
-        <div class="profile">
+        <SearchInput v-model="filters.searchQuery" />
+
+        <div class="notification-icon" @click="toggleNotifications">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+          </svg>
+          <span v-if="hasUnreadNotifications" class="notification-badge"></span>
+          <Transition name="dropdown-fade">
+            <NotificationsDropdown v-if="isNotificationsVisible" />
+          </Transition>
+        </div>
+
+        <div class="profile" @click="toggleProfileDropdown">
           <img src="https://i.pravatar.cc/40" alt="Profile" />
+          <Transition name="dropdown-fade">
+            <ProfileDropdown v-if="isProfileDropdownVisible" />
+          </Transition>
         </div>
       </div>
     </div>
@@ -25,13 +36,58 @@
 </template>
 
 <script setup>
+import { ref, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import SearchInput from './SearchInput.vue';
+import ProfileDropdown from './ProfileDropdown.vue';
+import NotificationsDropdown from './NotificationsDropdown.vue';
+import { useMangaStore } from '../stores/mangaStore';
 
-defineProps(['modelValue']);
-defineEmits(['update:modelValue']);
+const isProfileDropdownVisible = ref(false);
+const isNotificationsVisible = ref(false);
+
+const { filters, hasUnreadNotifications, markNotificationsAsRead } = useMangaStore();
+const router = useRouter();
+const route = useRoute();
+
+const toggleProfileDropdown = () => {
+  isProfileDropdownVisible.value = !isProfileDropdownVisible.value;
+  if (isProfileDropdownVisible.value) {
+    isNotificationsVisible.value = false; // Close other dropdown
+  }
+};
+
+const toggleNotifications = () => {
+  isNotificationsVisible.value = !isNotificationsVisible.value;
+  if (isNotificationsVisible.value) {
+    isProfileDropdownVisible.value = false; // Close other dropdown
+    markNotificationsAsRead();
+  }
+};
+
+watch(() => filters.searchQuery, (newValue) => {
+  if (newValue && route.path !== '/browse') {
+    router.push('/browse');
+  }
+});
+
+// Close dropdowns when navigating to a new page
+watch(() => route.path, () => {
+  isProfileDropdownVisible.value = false;
+  isNotificationsVisible.value = false;
+});
 </script>
 
 <style scoped>
+.dropdown-fade-enter-active,
+.dropdown-fade-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.dropdown-fade-enter-from,
+.dropdown-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
 .app-header {
   padding: 1rem 0;
   background-color: #ffffff;
@@ -51,7 +107,7 @@ defineEmits(['update:modelValue']);
 .header-left, .header-right {
   display: flex;
   align-items: center;
-  gap: 2.5rem;
+  gap: 1.5rem; /* Adjusted gap */
 }
 .logo {
   font-size: 1.75rem;
@@ -80,10 +136,29 @@ defineEmits(['update:modelValue']);
   color: #007bff;
   border-bottom-color: #007bff;
 }
+.notification-icon, .profile {
+  position: relative;
+  cursor: pointer;
+}
+.notification-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: #555;
+}
+.notification-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  background-color: #007bff;
+  border: 2px solid white;
+  border-radius: 50%;
+}
 .profile img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  cursor: pointer;
+  display: block;
 }
 </style>

@@ -3,16 +3,6 @@
     <h3>Filter & Sort</h3>
 
     <div class="filter-group">
-      <label for="search">Search</label>
-      <input
-        type="text"
-        id="search"
-        v-model="filters.searchQuery"
-        placeholder="Search by title..."
-      />
-    </div>
-
-    <div class="filter-group">
       <label>Genres</label>
       <div class="genre-tags">
         <button
@@ -63,7 +53,6 @@ const toggleGenre = (genre) => {
 </script>
 
 <style scoped>
-/* Styles are the same, no changes needed here */
 .manga-filter {
   width: 280px;
   flex-shrink: 0;
@@ -88,7 +77,6 @@ label {
   font-size: 0.9rem;
   color: #333;
 }
-input[type='text'],
 select {
   width: 100%;
   padding: 12px;
@@ -98,7 +86,6 @@ select {
   box-sizing: border-box;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
-input[type='text']:focus,
 select:focus {
   outline: none;
   border-color: #007bff;
